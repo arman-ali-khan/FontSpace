@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Download, Eye, Star, Crown, Zap, Gift, Lock } from 'lucide-react';
+import { Download, Eye, Star, Crown, Zap, Gift, Lock, ShoppingCart } from 'lucide-react';
 import { Font } from '@/types/font';
 
 interface FontCardProps {
@@ -39,74 +39,120 @@ export function FontCard({ font }: FontCardProps) {
   const getPricingColor = (tier: string) => {
     switch (tier) {
       case 'free':
-        return 'bg-green-500/20 text-green-300';
+        return 'bg-green-500/20 text-green-600 dark:text-green-400 border-green-500/30';
       case 'freemium':
-        return 'bg-yellow-500/20 text-yellow-300';
+        return 'bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border-yellow-500/30';
       case 'premium':
-        return 'bg-purple-500/20 text-purple-300';
+        return 'bg-purple-500/20 text-purple-600 dark:text-purple-400 border-purple-500/30';
       default:
-        return 'bg-white/5 text-foreground/70';
+        return 'bg-muted text-muted-foreground';
+    }
+  };
+
+  const getPricingGradient = (tier: string) => {
+    switch (tier) {
+      case 'free':
+        return 'from-green-500 to-blue-500';
+      case 'freemium':
+        return 'from-yellow-500 to-orange-500';
+      case 'premium':
+        return 'from-purple-500 to-pink-500';
+      default:
+        return 'from-gray-500 to-gray-600';
     }
   };
 
   return (
-    <Card className="group relative overflow-hidden bg-card/50 backdrop-blur-sm border-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/10">
+    <Card className="group relative overflow-hidden bg-card/50 backdrop-blur-sm border-border/50 hover:border-border transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/10">
       {/* Featured/Trending Badges */}
       <div className="absolute top-3 left-3 z-10 flex gap-2">
-        {font.featured && <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">Featured</Badge>}
-        {font.trending && <Badge className="bg-gradient-to-r from-pink-500 to-purple-500 text-white">Trending</Badge>}
+        {font.featured && (
+          <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0">
+            <Star className="h-3 w-3 mr-1" />
+            Featured
+          </Badge>
+        )}
+        {font.trending && (
+          <Badge className="bg-gradient-to-r from-pink-500 to-purple-500 text-white border-0">
+            Trending
+          </Badge>
+        )}
       </div>
 
       {/* Pricing Badge */}
       <div className="absolute top-3 right-3 z-10">
-        <Badge className={`${getPricingColor(font.pricingTier)} capitalize flex items-center gap-1`}>
+        <Badge className={`${getPricingColor(font.pricingTier)} capitalize flex items-center gap-1 border`}>
           {getPricingIcon(font.pricingTier)}
           {font.pricingTier}
-          {font.price && <span>${font.price}</span>}
+          {font.price && <span className="font-bold">${font.price}</span>}
         </Badge>
       </div>
 
       <CardContent className="p-6">
         {/* Font Preview */}
-        <div className="mb-4 h-24 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-lg flex items-center justify-center border border-white/5">
+        <div className="mb-4 h-24 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-lg flex items-center justify-center border border-border/50 relative overflow-hidden">
+          {font.pricingTier === 'premium' && (
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-[1px]" />
+          )}
           {font.category === 'symbol' ? (
-            <div className="flex space-x-2 text-2xl">
+            <div className="flex space-x-2 text-2xl text-foreground/80">
               <span>★</span>
               <span>♦</span>
               <span>●</span>
             </div>
           ) : (
-            <span className="text-2xl font-bold text-foreground" style={{ fontFamily: 'serif' }}>
+            <span className="text-2xl font-bold text-foreground/80" style={{ fontFamily: 'serif' }}>
               Aa
             </span>
+          )}
+          {font.pricingTier === 'premium' && (
+            <div className="absolute bottom-2 right-2">
+              <Lock className="h-4 w-4 text-purple-500" />
+            </div>
           )}
         </div>
 
         {/* Font Info */}
         <div className="space-y-3">
           <div>
-            <h3 className="font-bold text-lg text-foreground group-hover:text-purple-400 transition-colors">
+            <h3 className="font-bold text-lg text-foreground group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors">
               {font.name}
             </h3>
-            <p className="text-sm text-foreground/60">by {font.designer}</p>
+            <p className="text-sm text-muted-foreground">by {font.designer}</p>
           </div>
 
           <div className="flex flex-wrap gap-1">
-            <Badge variant="secondary" className="text-xs bg-white/5 text-foreground/70 capitalize">
+            <Badge variant="secondary" className="text-xs bg-muted text-muted-foreground capitalize border-border/50">
               {font.category === 'symbol' ? 'Symbol' : font.category.replace('-', ' ')}
             </Badge>
-            <Badge variant="secondary" className="text-xs bg-white/5 text-foreground/70">
+            <Badge variant="secondary" className="text-xs bg-muted text-muted-foreground border-border/50">
               {font.fileFormat.toUpperCase()}
             </Badge>
-            <Badge variant="secondary" className="text-xs bg-white/5 text-foreground/70">
+            <Badge variant="secondary" className="text-xs bg-muted text-muted-foreground border-border/50">
               {formatFileSize(font.fileSize)}
             </Badge>
           </div>
 
-          <p className="text-sm text-foreground/60 line-clamp-2">{font.description}</p>
+          <p className="text-sm text-muted-foreground line-clamp-2">{font.description}</p>
+
+          {/* Premium Features */}
+          {font.pricingTier === 'premium' && (
+            <div className="p-3 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg border border-purple-500/20">
+              <div className="flex items-center gap-2 mb-2">
+                <Crown className="h-4 w-4 text-purple-500" />
+                <span className="text-sm font-semibold text-foreground">Premium Font</span>
+              </div>
+              <ul className="text-xs text-muted-foreground space-y-1">
+                <li>• Commercial license included</li>
+                <li>• Multiple font weights</li>
+                <li>• Extended character set</li>
+                <li>• Premium support</li>
+              </ul>
+            </div>
+          )}
 
           {/* Stats */}
-          <div className="flex items-center justify-between text-sm text-foreground/60">
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
               <Download className="h-3 w-3" />
               {formatDownloads(font.downloads)}
@@ -118,33 +164,23 @@ export function FontCard({ font }: FontCardProps) {
 
       <CardFooter className="p-6 pt-0 flex gap-2">
         <Link href={`/font/${font.id}`} className="flex-1">
-          <Button variant="outline" className="w-full border-white/10 hover:border-white/20 hover:bg-white/5">
+          <Button variant="outline" className="w-full border-border/50 hover:border-border hover:bg-accent">
             <Eye className="h-4 w-4 mr-2" />
             Preview
           </Button>
         </Link>
-        <Button 
-          className={`${
-            font.pricingTier === 'premium' 
-              ? 'bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600'
-              : font.pricingTier === 'freemium'
-              ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600'
-              : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600'
-          }`}
-          disabled={font.pricingTier === 'premium'}
-        >
-          {font.pricingTier === 'premium' ? (
-            <>
-              <Lock className="h-4 w-4 mr-2" />
-              ${font.price}
-            </>
-          ) : (
-            <>
-              <Download className="h-4 w-4 mr-2" />
-              {font.pricingTier === 'freemium' ? 'Preview' : 'Download'}
-            </>
-          )}
-        </Button>
+        
+        {font.pricingTier === 'premium' ? (
+          <Button className={`bg-gradient-to-r ${getPricingGradient(font.pricingTier)} hover:opacity-90 text-white`}>
+            <ShoppingCart className="h-4 w-4 mr-2" />
+            ${font.price}
+          </Button>
+        ) : (
+          <Button className={`bg-gradient-to-r ${getPricingGradient(font.pricingTier)} hover:opacity-90 text-white`}>
+            <Download className="h-4 w-4 mr-2" />
+            {font.pricingTier === 'freemium' ? 'Preview' : 'Download'}
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );
