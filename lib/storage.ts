@@ -1,4 +1,4 @@
-import { Font, User, Designer, BlogPost } from '@/types/font';
+import { Font, User, Designer, BlogPost, Purchase } from '@/types/font';
 
 // Mock data for demonstration
 const mockFonts: Font[] = [
@@ -170,6 +170,36 @@ const mockUsers: User[] = [
     joinDate: '2024-01-01',
     uploadedFonts: ['1', '2', '3', '4'],
     totalDownloads: 4915
+  },
+  {
+    id: 'user1',
+    username: 'TypeMaster',
+    email: 'typemaster@example.com',
+    joinDate: '2024-01-15',
+    uploadedFonts: [],
+    totalDownloads: 0,
+    bio: 'Passionate about typography and design. Always looking for the perfect font for my projects.',
+    title: 'UI/UX Designer',
+    location: 'San Francisco, CA',
+    website: 'https://typemaster.design',
+    verified: true,
+    avatar: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=400',
+    socialLinks: {
+      twitter: 'https://twitter.com/typemaster',
+      github: 'https://github.com/typemaster',
+      dribbble: 'https://dribbble.com/typemaster'
+    }
+  }
+];
+
+const mockPurchases: Purchase[] = [
+  {
+    id: 'purchase1',
+    userId: 'user1',
+    fontId: '3',
+    amount: 29.99,
+    purchaseDate: '2024-01-20',
+    public: true
   }
 ];
 
@@ -252,12 +282,41 @@ export const storage = {
     }
   },
 
-  getUserByEmail: (email: string): User | undefined => {
-    return storage.getUsers().find(user => user.email === email);
+  getUserByEmail: (id: string): User | undefined => {
+    return storage.getUsers().find(user => user?.id === id);
   },
 
   getUserById: (id: string): User | undefined => {
     return storage.getUsers().find(user => user.id === id);
+  },
+
+  // Purchases
+  getPurchases: (): Purchase[] => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('purchases');
+      return stored ? JSON.parse(stored) : mockPurchases;
+    }
+    return mockPurchases;
+  },
+
+  getUserPurchases: (userId: string): Purchase[] => {
+    const purchases = storage.getPurchases();
+    const fonts = storage.getFonts();
+    
+    return purchases
+      .filter(purchase => purchase.userId === userId)
+      .map(purchase => ({
+        ...purchase,
+        font: fonts.find(font => font.id === purchase.fontId)
+      }));
+  },
+
+  savePurchase: (purchase: Purchase): void => {
+    if (typeof window !== 'undefined') {
+      const purchases = storage.getPurchases();
+      const updatedPurchases = [...purchases, purchase];
+      localStorage.setItem('purchases', JSON.stringify(updatedPurchases));
+    }
   },
 
   // Auth
@@ -279,3 +338,5 @@ export const storage = {
     }
   }
 };
+
+export {mockUsers}

@@ -153,10 +153,15 @@ export function Header() {
 
             {user ? (
               <div className="flex items-center space-x-2">
-                <Link href="/dashboard">
+                <Link href={`/profile/${user.id}`}>
                   <Button variant="ghost" className="hover:bg-accent">
                     <User className="h-4 w-4 mr-2" />
                     {user.username}
+                  </Button>
+                </Link>
+                <Link href="/dashboard">
+                  <Button variant="ghost" className="hover:bg-accent text-xs">
+                    Dashboard
                   </Button>
                 </Link>
                 <Button variant="ghost" size="icon" onClick={handleLogout} className="hover:bg-accent">
@@ -242,6 +247,11 @@ export function Header() {
 
                 {user ? (
                   <div className="flex items-center space-x-2">
+                    <Link href={`/profile/${user.id}`}>
+                      <Button variant="ghost" size="sm" className="hover:bg-accent">
+                        Profile
+                      </Button>
+                    </Link>
                     <Link href="/dashboard">
                       <Button variant="ghost" size="sm" className="hover:bg-accent">
                         Dashboard
