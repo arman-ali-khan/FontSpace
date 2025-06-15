@@ -120,7 +120,7 @@ export default function Browse() {
     <div className="container mx-auto px-4 py-8 space-y-8">
       {/* Header */}
       <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 dark:from-white dark:via-purple-200 to-pink-200 bg-clip-text text-transparent">
           Browse Fonts
         </h1>
         <p className="text-xl text-foreground/70 max-w-2xl mx-auto">

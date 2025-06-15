@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { 
   Moon, Sun, Upload, User, LogOut, Menu, X, 
   Home, Search, Users, BookOpen, Crown, 
-  Zap, Gift, Hash
+  Zap, Gift, Hash, Palette
 } from 'lucide-react';
 import { useTheme } from '@/components/theme-provider';
 import { auth } from '@/lib/auth';
@@ -132,10 +132,17 @@ export function Header() {
               <span>Blog</span>
             </Link>
 
-            {user && (
+            {user && user.isDesigner && (
               <Link href="/upload" className="flex items-center space-x-2 text-foreground/80 hover:text-foreground transition-colors">
                 <Upload className="h-4 w-4" />
                 <span>Upload</span>
+              </Link>
+            )}
+
+            {user && !user.isDesigner && user.designerApplicationStatus === 'none' && (
+              <Link href="/join-designer" className="flex items-center space-x-2 text-foreground/80 hover:text-foreground transition-colors">
+                <Palette className="h-4 w-4" />
+                <span>Join as Designer</span>
               </Link>
             )}
           </nav>
@@ -227,10 +234,17 @@ export function Header() {
                 <span>Blog</span>
               </Link>
 
-              {user && (
+              {user && user.isDesigner && (
                 <Link href="/upload" className="flex items-center space-x-2 text-foreground/80 hover:text-foreground transition-colors">
                   <Upload className="h-4 w-4" />
                   <span>Upload Font</span>
+                </Link>
+              )}
+
+              {user && !user.isDesigner && user.designerApplicationStatus === 'none' && (
+                <Link href="/join-designer" className="flex items-center space-x-2 text-foreground/80 hover:text-foreground transition-colors">
+                  <Palette className="h-4 w-4" />
+                  <span>Join as Designer</span>
                 </Link>
               )}
               

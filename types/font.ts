@@ -33,6 +33,8 @@ export interface User {
   title?: string;
   location?: string;
   verified?: boolean;
+  isDesigner?: boolean; // New field to track designer status
+  designerApplicationStatus?: 'none' | 'pending' | 'approved' | 'rejected'; // New field
   socialLinks?: {
     twitter?: string;
     instagram?: string;
@@ -58,6 +60,28 @@ export interface Designer {
     dribbble?: string;
     behance?: string;
   };
+}
+
+export interface DesignerApplication {
+  id: string;
+  userId: string;
+  displayName: string;
+  bio: string;
+  website?: string;
+  portfolio?: string;
+  experience: string;
+  motivation: string;
+  socialLinks: {
+    twitter?: string;
+    instagram?: string;
+    github?: string;
+    dribbble?: string;
+    behance?: string;
+  };
+  applicationDate: string;
+  status: 'pending' | 'approved' | 'rejected';
+  reviewDate?: string;
+  reviewNotes?: string;
 }
 
 export interface BlogPost {

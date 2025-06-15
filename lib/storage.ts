@@ -1,4 +1,4 @@
-import { Font, User, Designer, BlogPost, Purchase } from '@/types/font';
+import { Font, User, Designer, BlogPost, Purchase, DesignerApplication } from '@/types/font';
 
 // Mock data for demonstration
 const mockFonts: Font[] = [
@@ -169,7 +169,9 @@ const mockUsers: User[] = [
     email: 'admin@fontspace.web3',
     joinDate: '2024-01-01',
     uploadedFonts: ['1', '2', '3', '4'],
-    totalDownloads: 4915
+    totalDownloads: 4915,
+    isDesigner: true,
+    designerApplicationStatus: 'approved'
   },
   {
     id: 'user1',
@@ -183,6 +185,8 @@ const mockUsers: User[] = [
     location: 'San Francisco, CA',
     website: 'https://typemaster.design',
     verified: true,
+    isDesigner: false,
+    designerApplicationStatus: 'none',
     avatar: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=400',
     socialLinks: {
       twitter: 'https://twitter.com/typemaster',
@@ -202,6 +206,8 @@ const mockPurchases: Purchase[] = [
     public: true
   }
 ];
+
+const mockDesignerApplications: DesignerApplication[] = [];
 
 export const storage = {
   // Fonts
@@ -252,6 +258,36 @@ export const storage = {
     return storage.getDesigners().find(designer => designer.name === name);
   },
 
+  // Designer Applications
+  getDesignerApplications: (): DesignerApplication[] => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('designerApplications');
+      return stored ? JSON.parse(stored) : mockDesignerApplications;
+    }
+    return mockDesignerApplications;
+  },
+
+  saveDesignerApplication: (application: DesignerApplication): void => {
+    if (typeof window !== 'undefined') {
+      const applications = storage.getDesignerApplications();
+      const updatedApplications = [...applications, application];
+      localStorage.setItem('designerApplications', JSON.stringify(updatedApplications));
+      
+      // Update user's application status
+      const users = storage.getUsers();
+      const updatedUsers = users.map(user => 
+        user.id === application.userId 
+          ? { ...user, designerApplicationStatus: 'pending' as const }
+          : user
+      );
+      localStorage.setItem('users', JSON.stringify(updatedUsers));
+    }
+  },
+
+  getUserDesignerApplication: (userId: string): DesignerApplication | undefined => {
+    return storage.getDesignerApplications().find(app => app.userId === userId);
+  },
+
   // Blog Posts
   getBlogPosts: (): BlogPost[] => {
     if (typeof window !== 'undefined') {
@@ -282,12 +318,22 @@ export const storage = {
     }
   },
 
-  getUserByEmail: (id: string): User | undefined => {
-    return storage.getUsers().find(user => user?.id === id);
+  getUserByEmail: (email: string): User | undefined => {
+    return storage.getUsers().find(user => user.email === email);
   },
 
   getUserById: (id: string): User | undefined => {
     return storage.getUsers().find(user => user.id === id);
+  },
+
+  updateUser: (updatedUser: User): void => {
+    if (typeof window !== 'undefined') {
+      const users = storage.getUsers();
+      const updatedUsers = users.map(user => 
+        user.id === updatedUser.id ? updatedUser : user
+      );
+      localStorage.setItem('users', JSON.stringify(updatedUsers));
+    }
   },
 
   // Purchases

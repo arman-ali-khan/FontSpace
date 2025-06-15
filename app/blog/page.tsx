@@ -56,7 +56,7 @@ export default function Blog() {
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center space-x-3 mb-4">
           <BookOpen className="h-8 w-8 text-purple-400" />
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 dark:from-white dark:via-purple-200 dark:to-pink-400 to-pink-400 bg-clip-text text-transparent">
             Typography Blog
           </h1>
         </div>

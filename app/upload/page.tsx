@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { Upload, X, Plus, Gift, Zap, Crown } from 'lucide-react';
+import { Upload, X, Plus, Gift, Zap, Crown, Lock } from 'lucide-react';
 import { auth } from '@/lib/auth';
 import { storage } from '@/lib/storage';
 import { Font } from '@/types/font';
@@ -40,6 +40,12 @@ export default function UploadFont() {
     
     if (!currentUser) {
       router.push('/login');
+      return;
+    }
+
+    // Check if user is a designer
+    if (!currentUser.isDesigner) {
+      router.push('/join-designer');
       return;
     }
 
@@ -181,13 +187,22 @@ export default function UploadFont() {
       <div className="space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 dark:from-white dark:via-purple-200 to-pink-200 bg-clip-text text-transparent">
             Upload Font
           </h1>
           <p className="text-xl text-foreground/70">
             Share your typography with the community
           </p>
         </div>
+
+        {/* Designer Only Notice */}
+        <Alert className="border-purple-500/20 bg-purple-500/10">
+          <Lock className="h-4 w-4" />
+          <AlertDescription className="text-foreground">
+            <strong>Designer Access:</strong> Only approved designers can upload fonts. 
+            Regular users can browse, purchase, and review fonts.
+          </AlertDescription>
+        </Alert>
 
         <Card className="bg-card/50 backdrop-blur-sm border-white/10">
           <CardHeader>
