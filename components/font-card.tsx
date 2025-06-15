@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Download, Eye, Star, Crown, Zap, Gift, Lock, ShoppingCart, Check, ChevronDown } from 'lucide-react';
 import { Font } from '@/types/font';
 
@@ -64,16 +64,16 @@ export function FontCard({ font }: FontCardProps) {
   };
 
   const premiumFeatures = [
-    'Commercial license included',
-    'Multiple font weights',
-    'Extended character set',
+    'Commercial license',
+    'Multiple weights',
+    'Extended characters',
     'Premium support',
-    'Web font formats',
+    'Web formats',
     'Lifetime updates'
   ];
 
   return (
-    <Card className="group relative overflow-hidden bg-card/50 backdrop-blur-sm border-border/50 hover:border-border transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/10">
+    <Card className="group relative overflow-hidden bg-card/50 backdrop-blur-sm border-border/50 hover:border-border transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/10 h-full flex flex-col">
       {/* Featured/Trending Badges */}
       <div className="absolute top-3 left-3 z-10 flex gap-2">
         {font.featured && (
@@ -98,7 +98,7 @@ export function FontCard({ font }: FontCardProps) {
         </Badge>
       </div>
 
-      <CardContent className="p-6">
+      <CardContent className="p-6 flex-1 flex flex-col">
         {/* Font Preview */}
         <div className="mb-4 h-24 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-lg flex items-center justify-center border border-border/50 relative overflow-hidden">
           {font.pricingTier === 'premium' && (
@@ -123,7 +123,7 @@ export function FontCard({ font }: FontCardProps) {
         </div>
 
         {/* Font Info */}
-        <div className="space-y-3">
+        <div className="space-y-3 flex-1 flex flex-col">
           <div>
             <h3 className="font-bold text-lg text-foreground group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors">
               {font.name}
@@ -143,36 +143,37 @@ export function FontCard({ font }: FontCardProps) {
             </Badge>
           </div>
 
-          <p className="text-sm text-muted-foreground line-clamp-2">{font.description}</p>
+          <p className="text-sm text-muted-foreground line-clamp-2 flex-1">{font.description}</p>
 
-          {/* Premium Features Accordion */}
+          {/* Premium Features Dropdown */}
           {font.pricingTier === 'premium' && (
-            <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-lg border border-purple-500/20">
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="premium-features" className="border-none">
-                  <AccordionTrigger className="px-3 py-2 hover:no-underline">
-                    <div className="flex items-center gap-2">
-                      <Crown className="h-4 w-4 text-purple-500" />
-                      <span className="text-sm font-semibold text-foreground">Premium Features</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-3 pb-3">
-                    <div className="space-y-2">
-                      {premiumFeatures.map((feature, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                          <Check className="h-3 w-3 text-green-500 flex-shrink-0" />
-                          <span className="text-xs text-muted-foreground">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+            <div className="flex justify-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-purple-500/20 hover:from-purple-500/20 hover:to-pink-500/20"
+                  >
+                    <Crown className="h-4 w-4 mr-2 text-purple-500" />
+                    Premium Features
+                    <ChevronDown className="h-4 w-4 ml-2" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 bg-card/95 backdrop-blur-sm border-border/50">
+                  {premiumFeatures.map((feature, index) => (
+                    <DropdownMenuItem key={index} className="flex items-center gap-2 cursor-default">
+                      <Check className="h-3 w-3 text-green-500 flex-shrink-0" />
+                      <span className="text-sm">{feature}</span>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           )}
 
           {/* Stats */}
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <div className="flex items-center justify-between text-sm text-muted-foreground mt-auto">
             <span className="flex items-center gap-1">
               <Download className="h-3 w-3" />
               {formatDownloads(font.downloads)}
